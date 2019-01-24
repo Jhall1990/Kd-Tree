@@ -1,9 +1,9 @@
-import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.RectHV;
 
 
-public class PointSET {
-    public PointSET() {
+public class KdTree {
+    public KdTree() {
         // construct an empty set of points
     }
 
