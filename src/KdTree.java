@@ -5,26 +5,43 @@ import java.util.ArrayList;
 
 
 public class KdTree {
-    private class KdTreeNode {
-
-    }
+    private int count;
+    private KdTreeNode twoDTree = null;
 
     public KdTree() {
         // construct an empty set of points
+        count = 0;
+
     }
 
     public boolean isEmpty() {
         // is the set empty?
-        return false;
+        return count == 0;
     }
 
     public int size() {
         // number of points in the set
-        return 0;
+        return count;
     }
 
     public void insert(Point2D p) {
         // add the point to the set (if it is not already in the set)
+        if (twoDTree == null) {
+            twoDTree = new KdTreeNode(p);
+            count++;
+        } else {
+            KdTreeNode curNode = twoDTree;
+
+            while (curNode != null) {
+                if (curNode.point.compareTo(p) > 0)
+                    curNode = curNode.right;
+                else
+                    curNode = curNode.left;
+            }
+
+            curNode = new KdTreeNode(p);
+        }
+
     }
 
     public boolean contains(Point2D p) {
@@ -48,5 +65,17 @@ public class KdTree {
 
     public static void main(String[] args) {
         // unit testing of the methods (optional)
+    }
+
+    private class KdTreeNode {
+        private final Point2D point;
+        private final KdTreeNode left;
+        private final KdTreeNode right;
+
+        KdTreeNode(Point2D point) {
+            this.point = point;
+            this.left = null;
+            this.right = null;
+        }
     }
 }
