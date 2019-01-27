@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class KdTree {
     private int count;
-    private KdTreeNode twoDTree = null;
+    private KdTreeNode root = null;
 
     public KdTree() {
         // construct an empty set of points
@@ -26,27 +26,47 @@ public class KdTree {
 
     public void insert(Point2D p) {
         // add the point to the set (if it is not already in the set)
-        if (twoDTree == null) {
-            twoDTree = new KdTreeNode(p);
+        root = insert(root, p, true);
+    }
+
+    private KdTreeNode insert(KdTreeNode node, Point2D p, boolean vert) {
+        if (node == null) {
             count++;
-        } else {
-            KdTreeNode curNode = twoDTree;
-
-            while (curNode != null) {
-                if (curNode.point.compareTo(p) > 0)
-                    curNode = curNode.right;
-                else
-                    curNode = curNode.left;
-            }
-
-            curNode = new KdTreeNode(p);
+            return new KdTreeNode(p, vert);
         }
 
+        // The node is already in the tree.
+        if (Double.compare(p.x(), node.point.x()) == 0 && Double.compare(p.y(), node.point.y()) == 0)
+            return node;
+
+        if ((vert && p.x() < node.point.x()) || !vert && p.y() < node.point.y())
+            node.left = insert(node.left, p, !node.vertical);
+        else
+            node.right = insert(node.right, p, !node.vertical);
+
+        return node;
     }
 
     public boolean contains(Point2D p) {
         // does the set contain point p?
-        return false;
+        return contains(root, p) != null;
+    }
+
+    private KdTreeNode contains(KdTreeNode node, Point2D p) {
+        // Check if we reached the end of the tree.
+        if (node == null) {
+            return null;
+        }
+
+        // Compare the current node's point to the search point.
+        int comp = node.point.compareTo(p);
+
+        if (comp == 0)
+            return node;
+        else if (comp < 0)
+            return contains(node.left, p);
+        else
+            return contains(node.right, p);
     }
 
     public void draw() {
@@ -69,13 +89,15 @@ public class KdTree {
 
     private class KdTreeNode {
         private final Point2D point;
-        private final KdTreeNode left;
-        private final KdTreeNode right;
+        private KdTreeNode left;
+        private KdTreeNode right;
+        private final boolean vertical;
 
-        KdTreeNode(Point2D point) {
+        KdTreeNode(Point2D point, boolean vertical) {
             this.point = point;
             this.left = null;
             this.right = null;
+            this.vertical = vertical;
         }
     }
 }

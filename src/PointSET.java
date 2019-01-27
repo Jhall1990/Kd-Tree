@@ -67,7 +67,7 @@ public class PointSET {
         // a nearest neighbor in the set to point p; null if the set is empty
         if (p == null)
             throw new IllegalArgumentException("p cannot be null");
-        
+
         if (isEmpty())
             return null;
 
